@@ -1,17 +1,18 @@
 package com.sucks.socks_warehouse.repository.impl;
 
-import com.sucks.socks_warehouse.model.Socks;
-import com.sucks.socks_warehouse.model.SocksBatch;
+import com.sucks.socks_warehouse.model.socks.Socks;
+import com.sucks.socks_warehouse.model.socks.SocksBatch;
 import com.sucks.socks_warehouse.repository.SocksRepository;
-import io.swagger.v3.oas.models.security.SecurityScheme;
 import org.springframework.stereotype.Repository;
-import org.webjars.NotFoundException;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+
 @Repository
 public class SocksRepositoryImpl implements SocksRepository {
-    private HashMap<Socks, Integer> socksMap = new HashMap<>();
+    private final HashMap<Socks, Integer> socksMap = new HashMap<>();
 
     @Override
     public void save(SocksBatch socksBatch) {
@@ -45,5 +46,25 @@ public class SocksRepositoryImpl implements SocksRepository {
     @Override
     public Map<Socks, Integer> getAll() {
         return socksMap;
+    }
+
+    @Override
+    public List<SocksBatch> getList() {
+        List<SocksBatch> socksBatchList = new ArrayList<>();
+
+        for (Map.Entry<Socks, Integer> socksItem : socksMap.entrySet()) {
+            socksBatchList.add(new SocksBatch(socksItem.getKey(), socksItem.getValue()));
+        }
+        return socksBatchList;
+    }
+
+    @Override
+    public void replace(List<SocksBatch> socksBatchList) {
+        socksMap.clear();
+
+        for (SocksBatch batch : socksBatchList) {
+            save(batch);
+
+        }
     }
 }

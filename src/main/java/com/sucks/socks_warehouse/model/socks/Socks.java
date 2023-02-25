@@ -1,4 +1,4 @@
-package com.sucks.socks_warehouse.model;
+package com.sucks.socks_warehouse.model.socks;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

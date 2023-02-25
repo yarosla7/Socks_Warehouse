@@ -1,9 +1,13 @@
 package com.sucks.socks_warehouse.services;
 
 import com.sucks.socks_warehouse.exception.ValidationException;
-import com.sucks.socks_warehouse.model.Colors;
-import com.sucks.socks_warehouse.model.Sizes;
-import com.sucks.socks_warehouse.model.SocksBatch;
+import com.sucks.socks_warehouse.model.socks.Colors;
+import com.sucks.socks_warehouse.model.socks.Sizes;
+import com.sucks.socks_warehouse.model.socks.SocksBatch;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.File;
+import java.io.IOException;
 
 public interface SocksWarehouseService {
     /**
@@ -21,12 +25,17 @@ public interface SocksWarehouseService {
 
     /**
      * метод получение пары носков исходя из параметров запроса (свойств объекта (носков))
-     * @param color - цвет
-     * @param size - размер
+     *
+     * @param color     - цвет
+     * @param size      - размер
      * @param cottonMin - минамальное значение хлопка в составе
      * @param cottonMax - максимальное значение хлопка в составе
      * @return - возвращает количество пар таких носков на складе
      * @throws ValidationException - выбрасывает ошибку валидаци
      */
     int getCount(Colors color, Sizes size, int cottonMin, int cottonMax) throws ValidationException;
+
+    File exportFile() throws IOException;
+
+    void importFile(MultipartFile file) throws IOException;
 }

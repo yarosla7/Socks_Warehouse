@@ -1,8 +1,8 @@
 package com.sucks.socks_warehouse.services;
 
-import com.sucks.socks_warehouse.model.Colors;
-import com.sucks.socks_warehouse.model.Sizes;
-import com.sucks.socks_warehouse.model.SocksBatch;
+import com.sucks.socks_warehouse.model.socks.Colors;
+import com.sucks.socks_warehouse.model.socks.Sizes;
+import com.sucks.socks_warehouse.model.socks.SocksBatch;
 
 public interface ValidationService {
 

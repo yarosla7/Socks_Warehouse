@@ -1,23 +1,40 @@
 package com.sucks.socks_warehouse.services.impl;
 
 import com.sucks.socks_warehouse.exception.ValidationException;
-import com.sucks.socks_warehouse.model.Colors;
-import com.sucks.socks_warehouse.model.Sizes;
-import com.sucks.socks_warehouse.model.Socks;
-import com.sucks.socks_warehouse.model.SocksBatch;
+import com.sucks.socks_warehouse.model.socks.Colors;
+import com.sucks.socks_warehouse.model.socks.Sizes;
+import com.sucks.socks_warehouse.model.socks.Socks;
+import com.sucks.socks_warehouse.model.socks.SocksBatch;
 import com.sucks.socks_warehouse.repository.SocksRepository;
+import com.sucks.socks_warehouse.services.FileService;
 import com.sucks.socks_warehouse.services.SocksWarehouseService;
+import com.sucks.socks_warehouse.services.StoreOperationService;
 import com.sucks.socks_warehouse.services.ValidationService;
 import lombok.AllArgsConstructor;
+import org.springframework.asm.TypeReference;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Path;
+import java.util.List;
 import java.util.Map;
+
 @Service
 @AllArgsConstructor
 public class SocksWarehouseServiceImpl implements SocksWarehouseService {
 
     private final SocksRepository socksRepository;
     private final ValidationService validationService;
+    private final FileService fileService;
+    private final StoreOperationService operationService;
+
+    @Value("${path.to.data.file}")
+    private String dataFilePath;
+    @Value("${name.of.data.file}")
+    private String dataFileName;
 
     @Override
     public void add(SocksBatch socksBatch) {
@@ -27,6 +44,7 @@ public class SocksWarehouseServiceImpl implements SocksWarehouseService {
             e.printStackTrace();
             throw new RuntimeException("Переданые параметры некорректны.");
         }
+        operationService.accept(socksBatch);
         socksRepository.save(socksBatch);
     }
 
@@ -38,6 +56,7 @@ public class SocksWarehouseServiceImpl implements SocksWarehouseService {
             e.printStackTrace();
             throw new RuntimeException(e);
         }
+        operationService.issuance(socksBatch);
         return socksRepository.remove(socksBatch);
     }
 
@@ -59,6 +78,18 @@ public class SocksWarehouseServiceImpl implements SocksWarehouseService {
             }
         }
         return 0;
+    }
+
+    @Override
+    public File exportFile() throws IOException {
+        return fileService.saveToFile(socksRepository.getList(), Path.of(dataFilePath)).toFile();
+    }
+
+    @Override
+    public void importFile(MultipartFile file) throws IOException {
+        List<SocksBatch> socksBatchList = fileService.uploadFromFile(file, dataFilePath, new TypeReference<List<SocksBatch>>() {
+        });
+        socksRepository.replace(socksBatchList);
     }
 
     private void checkForValidate(SocksBatch socksBatch) throws ValidationException {

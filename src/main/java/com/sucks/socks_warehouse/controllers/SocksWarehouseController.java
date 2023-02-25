@@ -2,9 +2,9 @@ package com.sucks.socks_warehouse.controllers;
 
 import com.sucks.socks_warehouse.controllers.dto.ResponseDto;
 import com.sucks.socks_warehouse.exception.ValidationException;
-import com.sucks.socks_warehouse.model.Colors;
-import com.sucks.socks_warehouse.model.Sizes;
-import com.sucks.socks_warehouse.model.SocksBatch;
+import com.sucks.socks_warehouse.model.socks.Colors;
+import com.sucks.socks_warehouse.model.socks.Sizes;
+import com.sucks.socks_warehouse.model.socks.SocksBatch;
 import com.sucks.socks_warehouse.services.SocksWarehouseService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;

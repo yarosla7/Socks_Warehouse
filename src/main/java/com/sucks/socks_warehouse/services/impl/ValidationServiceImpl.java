@@ -1,10 +1,16 @@
 package com.sucks.socks_warehouse.services.impl;
 
-import com.sucks.socks_warehouse.model.Colors;
-import com.sucks.socks_warehouse.model.Sizes;
-import com.sucks.socks_warehouse.model.SocksBatch;
+import com.sucks.socks_warehouse.model.operation.OperationType;
+import com.sucks.socks_warehouse.model.operation.StoreOperation;
+import com.sucks.socks_warehouse.model.socks.Colors;
+import com.sucks.socks_warehouse.model.socks.Sizes;
+import com.sucks.socks_warehouse.model.socks.SocksBatch;
+import com.sucks.socks_warehouse.services.StoreOperationService;
 import com.sucks.socks_warehouse.services.ValidationService;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class ValidationServiceImpl implements ValidationService {
@@ -24,5 +30,27 @@ public class ValidationServiceImpl implements ValidationService {
 
     private boolean cottonCheck(int cottonMin, int cottonMax) {
         return cottonMin >= 0 && cottonMax <= 100;
+    }
+
+    @Service
+    public static class StoreOperationServiceImpl implements StoreOperationService {
+
+        private final List<StoreOperation> operationList = new ArrayList<>();
+
+        @Override
+        public void accept(SocksBatch socksBatch) {
+            operationList.add(new StoreOperation(OperationType.ACCEPT, socksBatch));
+
+        }
+
+        @Override
+        public void issuance(SocksBatch socksBatch) {
+            operationList.add(new StoreOperation(OperationType.ISSUANCE, socksBatch));
+        }
+
+        @Override
+        public void reject(SocksBatch socksBatch) {
+            operationList.add(new StoreOperation(OperationType.REJECT, socksBatch));
+        }
     }
 }
