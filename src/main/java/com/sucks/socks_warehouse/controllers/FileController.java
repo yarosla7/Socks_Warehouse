@@ -11,10 +11,7 @@ import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
@@ -78,7 +75,8 @@ public class FileController {
                     description = "Файл не принят на сервер, либо ошибка сервера. Обратитесь к администратору"
             )
     })
-    @GetMapping("/import")
+    @PostMapping(value = "/import",
+            consumes = "multipart/form-data")
     public ResponseEntity<String> uploadSocksJson(@RequestParam MultipartFile file) {
         try {
             socksWarehouseService.importFile(file);
@@ -105,14 +103,14 @@ public class FileController {
                     )
             }
     )
-    @GetMapping("/operations/export")
+    @GetMapping(value = "/operations/export")
     public ResponseEntity<InputStreamResource> downloadOperations() {
         try {
             File socksFile = storeOperationService.exportFile();
             InputStreamResource resource = new InputStreamResource(new FileInputStream(socksFile));
 
             return ResponseEntity.ok()
-                    .contentType(MediaType.APPLICATION_OCTET_STREAM)
+                    .contentType(MediaType.APPLICATION_JSON)
                     .contentLength(socksFile.length())
                     .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + socksFile.getName())
                     .body(resource);
@@ -136,7 +134,7 @@ public class FileController {
                     description = "Файл не принят на сервер, либо ошибка сервера. Обратитесь к администратору"
             )
     })
-    @GetMapping("/operations/import")
+    @PostMapping(value = "/operations/import", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<String> uploadSocksOperations(@RequestParam MultipartFile file) {
         try {
             storeOperationService.importFile(file);

@@ -12,7 +12,7 @@ import java.util.Map;
 
 @Repository
 public class SocksRepositoryImpl implements SocksRepository {
-    private final HashMap<Socks, Integer> socksMap = new HashMap<>();
+    private final Map<Socks, Integer> socksMap = new HashMap<>();
 
     @Override
     public void save(SocksBatch socksBatch) {
@@ -33,7 +33,7 @@ public class SocksRepositoryImpl implements SocksRepository {
             int quantity = socksMap.get(socks);
 
             if (quantity > socksBatch.getQuantity()) {
-                socksMap.replace(socks, socksMap.get(socks) - socksBatch.getQuantity());
+                socksMap.replace(socks, quantity - socksBatch.getQuantity());
                 return socksBatch.getQuantity();
             } else {
                 socksMap.remove(socks);

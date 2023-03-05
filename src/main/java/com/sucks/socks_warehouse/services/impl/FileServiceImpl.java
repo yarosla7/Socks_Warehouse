@@ -1,9 +1,9 @@
 package com.sucks.socks_warehouse.services.impl;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sucks.socks_warehouse.services.FileService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.asm.TypeReference;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -29,7 +29,7 @@ public class FileServiceImpl implements FileService {
     }
 
     @Override
-    public <T> List<T> uploadFromFile(MultipartFile file, Path path, TypeReference typeReference) throws IOException {
+    public <T> List<T> uploadFromFile(MultipartFile file, Path path, TypeReference<List<T>> typeReference) throws IOException {
         uploadFile(file, path);
         return readListFromFile(path, typeReference);
     }
@@ -65,7 +65,6 @@ public class FileServiceImpl implements FileService {
         if (json.isEmpty()) {
             return new ArrayList<>();
         }
-
         return objectMapper.readValue(json, typeReference);
     }
 }

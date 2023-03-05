@@ -18,20 +18,23 @@ public interface SocksWarehouseService {
 
     /**
      * изменение количества пар на складе
+     *
      * @param socksBatch - передаётся пара носков для списания или выдачи со склада
      * @return - возвращает int количество пар
      */
     int edit(SocksBatch socksBatch);
+
+    int reject(SocksBatch socksBatch);
 
     /**
      * метод получение пары носков исходя из параметров запроса (свойств объекта (носков))
      *
      * @param color     - цвет
      * @param size      - размер
-     * @param cottonMin - минамальное значение хлопка в составе
+     * @param cottonMin - минимальное значение хлопка в составе
      * @param cottonMax - максимальное значение хлопка в составе
      * @return - возвращает количество пар таких носков на складе
-     * @throws ValidationException - выбрасывает ошибку валидаци
+     * @throws ValidationException - выбрасывает ошибку валидации
      */
     int getCount(Colors color, Sizes size, int cottonMin, int cottonMax) throws ValidationException;
 

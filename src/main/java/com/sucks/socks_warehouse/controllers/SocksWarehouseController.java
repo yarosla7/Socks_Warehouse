@@ -71,14 +71,10 @@ public class SocksWarehouseController {
     private ResponseEntity<ResponseDto> issuance(@RequestBody SocksBatch socksBatch) {
         int socksCount = socksWarehouseService.edit(socksBatch);
         int quantity;
-        try {
-            quantity = socksWarehouseService.getCount(socksBatch.getSocks().getColor(),
-                    socksBatch.getSocks().getSize(),
-                    0,
-                    100);
-        } catch (ValidationException e) {
-            throw new RuntimeException(e);
-        }
+        quantity = socksWarehouseService.getCount(socksBatch.getSocks().getColor(),
+                socksBatch.getSocks().getSize(),
+                0,
+                100);
         return ResponseEntity.ok(new ResponseDto(socksCount + " пар носков отдано со склада. Осталось: " + quantity));
     }
 
@@ -135,7 +131,7 @@ public class SocksWarehouseController {
     })
     @DeleteMapping
     private ResponseEntity<ResponseDto> reject(@RequestBody SocksBatch socksBatch) {
-        int socksCount = socksWarehouseService.edit(socksBatch);
+        int socksCount = socksWarehouseService.reject(socksBatch);
         return ResponseEntity.ok(new ResponseDto(socksCount + " пар носков списано со склада."));
     }
 }
